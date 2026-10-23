@@ -1,0 +1,28 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+local.properties
+*.jks
+*.keystore
+secrets.properties
+credentials.json
+
+# Android / Gradle outputs
+.gradle/
+build/
+**/build/
+.externalNativeBuild/
+.cxx/
+local-sdk/
+
+# IDE and OS noise
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs and crash dumps
+*.log
+hs_err_pid*
