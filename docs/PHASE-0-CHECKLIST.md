@@ -8,27 +8,30 @@ Status labels: **Verified in documentation**, **Device test required**, **Open**
 
 - [x] Official Discord documentation states that Social SDK 1.10+ supports Rich Presence through unauthenticated RPC on Android.
 - [x] Official documentation lists these requirements: Discord Android installed and signed in, and a registered Discord application with a valid Application ID.
-- [ ] Confirm the current SDK download, supported Android package/ABI, minimum platform requirements, redistribution rules, and license terms.
+- [x] Official docs describe the basic flow: set Application ID, configure an activity, call `UpdateRichPresence`.
+- [x] Official documentation confirms that SDK downloads are accessed through the Social SDK section of the Developer Portal.
+- [ ] Confirm Discord authorizes a standalone companion app that detects a third-party game's foreground state. Do not misrepresent the app as a game to pass a form.
+- [ ] Inspect the authorized SDK archive for Android libraries, supported ABIs, package size, license/redistribution requirements, and minimum Android/NDK/CMake requirements.
 - [ ] Confirm the SDK can be integrated into a standalone Kotlin Android app rather than only an intended game-engine setup.
 - [ ] Build a minimal proof of concept that publishes a test activity, updates it, and clears it from the signed-in Discord Android client.
 - [ ] Verify failure handling when Discord is closed, signed out, or disconnected.
 - [ ] Verify the intended activity fields and artwork behavior on an actual Discord profile.
 
-**Gate result:** Documentation feasibility is promising; implementation feasibility remains unproven until the SDK packaging and device test pass.
+**Gate result:** Android RPC is documented, but the companion-app use case, archive contents, and device behavior remain unverified.
 
 ## Gate B: Minecraft Bedrock foreground detection
 
 - [ ] Confirm the installed Minecraft package can be identified reliably on the target device.
-- [ ] Find and test the device's Usage Access settings and determine whether CraftPresence can receive usage events after explicit user authorization.
+- [ ] Install a test app and verify CraftPresence can receive usage events after the owner grants CraftPresence its own Usage Access.
 - [ ] Test whether the OS reports Minecraft foreground/background transitions consistently on Android 14 / API 34.
 - [ ] Test behavior after screen lock, app switching, process recreation, battery optimization, and reboot.
 - [ ] Confirm a 15-second app-switch grace period avoids false session endings without leaving presence stale.
 - [ ] Verify manual Stop and manual disable always clear presence immediately.
 - [ ] Document the exact permission explanation and recovery instructions if Usage Access is unavailable.
 
-**Important:** Usage Access is an OS-level permission and may be exposed differently by device firmware. Do not assume that a permission screen or API behavior exists until it is observed on the target device. Do not attempt to bypass Android restrictions.
+**Important:** The owner reports Minecraft appears to have Usage Access. That does not grant access to CraftPresence. Usage Access is an OS-level permission and may be exposed differently by device firmware. Do not attempt to bypass Android restrictions.
 
-**Gate result:** Open. No successful device test is recorded yet.
+**Gate result:** Open. No successful CraftPresence device test is recorded yet.
 
 ## Gate C: Build on the Android tablet using Termux
 
@@ -36,9 +39,9 @@ Known environment notes from the project owner:
 - Samsung Galaxy Tab S6 Lite, Android 14 / API 34, ARM64.
 - Termux is installed; Java 21.0.13 is available.
 - Gradle 9.3.1 has been downloaded and its version command succeeds.
-- clang is installed; CMake was not installed at last check.
+- clang is installed; CMake and sdkmanager were not found at last check.
 - Approximately 11 GB of free storage was reported at last check.
-- Android SDK/NDK paths were not found during the earlier check.
+- ANDROID_HOME and ANDROID_SDK_ROOT are unset.
 
 Checklist:
 - [ ] Confirm a supported Android SDK installation route in Termux and estimate its disk usage.
@@ -64,6 +67,7 @@ Phase 0 passes only when:
 
 | Date | Area | Evidence | Result |
 |---|---|---|---|
-| 2026-10-23 | Discord | Official Discord Social SDK documentation and release notes | Android unauthenticated RPC Rich Presence is documented for SDK 1.10+; device test pending |
-| Pending | Detection | Target-device Usage Access test | Not tested |
+| 2026-10-23 | Discord | Official Rich Presence guide, SDK installation/release notes, overview, and SDK Terms | Android unauthenticated RPC is documented; companion-app use and package details need confirmation |
+| 2026-10-23 | Termux | User-provided command output | Java 21 and Gradle 9.3.1 work; clang present; SDK/NDK toolchain not configured; ~11 GB free |
+| Pending | Detection | Target-device Usage Access test | Minecraft has Usage Access reported; CraftPresence test not done |
 | Pending | Build | Minimal Android build/install from Termux | Not tested |
